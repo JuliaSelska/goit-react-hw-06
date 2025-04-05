@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styles from './SearchBox.module.css'
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { changeFilter } from '../redux/filtersSlice';
+import { changeFilter } from '../../redux/filtersSlice';
 
 
 const SearchBox = ({ filter, onFilterChange }) => {
