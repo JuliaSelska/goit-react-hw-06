@@ -3,6 +3,8 @@ import * as Yup from "yup";
 import { nanoid } from "nanoid";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import styles from './ContactForm.module.css'
+import { addContact } from "../redux/store";
+import { useDispatch, useSelector } from "react-redux";
 
 const ContactSchema = Yup.object().shape({
     name: Yup.string().min(3, "Too short!").max(50, "Too long!").required("Recuired"),
@@ -15,26 +17,32 @@ const initialValues = {
     number: "",
 };
 
-const ContactForm = ({ onAddContact }) => {
-
+const ContactForm = () => {
+    const dispatch = useDispatch();
     const nameFieldId = useId();
     const numberFieldId = useId();
 
-    const handleSubmit = (values, actions) => {
-        const newContact = {
-            id: nanoid(),
-            name: values.name,
-            number: values.number,
-        };
+    const handleAddContacts = (event) => {
+        event.preventDefault();
+        dispatch(addContact(event.target.elements.text.value));
+        event.target.reset();
+    }
 
-        onAddContact(newContact);
-        actions.resetForm();
-    };
+    // const handleSubmit = (values, actions) => {
+    //     const newContact = {
+    //         id: nanoid(),
+    //         name: values.name,
+    //         number: values.number,
+    //     };
+
+    //     onAddContact(newContact);
+    //     actions.resetForm();
+    // };
 
     return (
         <Formik
             initialValues={initialValues}
-            onSubmit={handleSubmit}
+            onSubmit={handleAddContacts}
             validationSchema={ContactSchema}>
             <Form className={styles.formContainer}>
                 <div className={styles.formGroup}>
@@ -49,7 +57,7 @@ const ContactForm = ({ onAddContact }) => {
                     <ErrorMessage name="number" component="span" />
                 </div>
 
-                <button className={styles.addButton} type="submit">Add contact</button>
+                <button className={styles.addButton} type="submit" onClick={handleAddContacts}>Add contact</button>
             </Form>
         </Formik>
     );
