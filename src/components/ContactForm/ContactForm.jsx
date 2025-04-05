@@ -3,8 +3,8 @@ import * as Yup from "yup";
 import { nanoid } from "nanoid";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import styles from './ContactForm.module.css'
-import { addContact } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
+import { addContact } from "../redux/contactsSlice";
 
 const ContactSchema = Yup.object().shape({
     name: Yup.string().min(3, "Too short!").max(50, "Too long!").required("Recuired"),
@@ -22,22 +22,16 @@ const ContactForm = () => {
     const nameFieldId = useId();
     const numberFieldId = useId();
 
-    const handleAddContacts = (event) => {
-        event.preventDefault();
-        dispatch(addContact(event.target.elements.text.value));
-        event.target.reset();
-    }
+    const handleAddContacts = (values, { resetForm }) => {
+        const newContact = {
+            id: nanoid(),
+            name: values.name,
+            number: values.number,
+        };
+        dispatch(addContact(newContact));
+        resetForm();
+    };
 
-    // const handleSubmit = (values, actions) => {
-    //     const newContact = {
-    //         id: nanoid(),
-    //         name: values.name,
-    //         number: values.number,
-    //     };
-
-    //     onAddContact(newContact);
-    //     actions.resetForm();
-    // };
 
     return (
         <Formik
@@ -50,14 +44,12 @@ const ContactForm = () => {
                     <Field className={styles.input} type="text" name="name" id={nameFieldId} />
                     <ErrorMessage name="name" component="span" />
                 </div>
-
                 <div className={styles.formGroup}>
                     <label className={styles.label} htmlFor={numberFieldId}>Number</label>
-                    <Field className={styles.input} type="number" name="number" id={numberFieldId} />
+                    <Field className={styles.input} type="text" name="number" id={numberFieldId} />
                     <ErrorMessage name="number" component="span" />
                 </div>
-
-                <button className={styles.addButton} type="submit" onClick={handleAddContacts}>Add contact</button>
+                <button className={styles.addButton} type="submit">Add contact</button>
             </Form>
         </Formik>
     );

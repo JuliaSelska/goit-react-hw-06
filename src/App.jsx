@@ -1,45 +1,26 @@
-import { useState, useEffect } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-import './App.css'
+import { useSelector, useDispatch } from 'react-redux';
+import { addContact, deleteContact } from './components/redux/contactsSlice';
+import { changeFilter } from './components/redux/filtersSlice';
 import SearchBox from './components/SearchBox/SearchBox';
-import ContactForm from '../src/components/ContactForm/ContactForm'
-import ContactList from '../src/components/ContactList/ContactList'
-
-const LOCALSTORAGE_KEY = 'contacts';
-
-const initialContacts = [
-  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-];
-
+import ContactForm from './components/ContactForm/ContactForm';
+import ContactList from './components/ContactList/ContactList';
+import styles from '../src/App.module.css'
 
 const App = () => {
-  const [contacts, setContacts] = useState(() => {
-    const savedContacts = localStorage.getItem(LOCALSTORAGE_KEY);
-    return savedContacts ? JSON.parse(savedContacts) : initialContacts;
-  });
-
-  const [filter, setFilter] = useState(""); // Додаємо стан фільтру
-
-  useEffect(() => {
-    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(contacts));
-  }, [contacts]);
-
-
-  const handleFilterChange = (newValue) => {
-    setFilter(newValue); // Оновлюємо стан при зміні інпуту
-  };
+  const dispatch = useDispatch();
+  const contacts = useSelector((state) => state.contacts.items);
+  const filter = useSelector((state) => state.filters.name);
 
   const handleAddContact = (newContact) => {
-    setContacts((prevContacts) => [...prevContacts, newContact]);
-
+    dispatch(addContact(newContact));
   };
 
   const handleDeleteContact = (contactId) => {
-    setContacts((prevContacts) => prevContacts.filter(contact => contact.id !== contactId));
+    dispatch(deleteContact(contactId));
+  };
+
+  const handleFilterChange = (value) => {
+    dispatch(changeFilter(value));
   };
 
   const filteredContacts = contacts.filter((contact) =>
@@ -47,7 +28,7 @@ const App = () => {
   );
 
   return (
-    <div>
+    <div className={styles.container}>
       <h1>Phonebook</h1>
       <ContactForm onAddContact={handleAddContact} />
       <SearchBox filter={filter} onFilterChange={handleFilterChange} />
@@ -56,5 +37,4 @@ const App = () => {
   );
 };
 
-
-export default App
+export default App;

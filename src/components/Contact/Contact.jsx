@@ -1,19 +1,15 @@
-import styles from './Contact.module.css'
-import clsx from 'clsx';
-import { BsFillTelephoneFill } from "react-icons/bs";
-import { BsPersonFill } from "react-icons/bs";
-import { deleteContact } from '../redux/store';
+import styles from './Contact.module.css';
+import { BsFillTelephoneFill, BsPersonFill } from "react-icons/bs";
 import { useDispatch } from 'react-redux';
+import { deleteContact } from '../redux/contactsSlice';
 
-
-const Contact = ({ id, name, number, onDeleteContact }) => {
-
+const Contact = ({ id, name, number }) => {
     const dispatch = useDispatch();
 
     const handleDeleteContact = () => {
-        const deleteContactAction = deleteContact();
-        dispatch(deleteContactAction);
-    }
+        dispatch(deleteContact(id));
+    };
+
 
     return (
         <div className={styles.contactCard}>
@@ -25,9 +21,7 @@ const Contact = ({ id, name, number, onDeleteContact }) => {
                     <BsFillTelephoneFill className={styles.icon} /> {number}
                 </p>
             </div>
-
             <button onClick={handleDeleteContact} className={styles.contactButton}>Delete</button>
-
         </div>
     );
 };
