@@ -19,11 +19,19 @@ const contactsPersistConfig = {
     whitelist: ['items'],
 };
 
+const filterPersistConfig = {
+    key: 'filters',
+    storage,
+    whitelist: ['name'],
+};
+
+
 const store = configureStore({
     reducer: {
         contacts: persistReducer(contactsPersistConfig, contactsReducer),
-        filters: filtersReducer,
+        filters: persistReducer(filterPersistConfig, filtersReducer),
     },
+
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware({
             serializableCheck: {

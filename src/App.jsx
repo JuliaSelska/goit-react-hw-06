@@ -31,7 +31,7 @@ const App = () => {
     <div className={styles.container}>
       <h1>Phonebook</h1>
       <ContactForm onAddContact={handleAddContact} />
-      <SearchBox filter={filter} onFilterChange={handleFilterChange} />
+      <SearchBox />
       <ContactList contacts={filteredContacts} onDeleteContact={handleDeleteContact} />
     </div>
   );
